@@ -15,6 +15,7 @@ License:	GPL v2
 Group:		Applications
 Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
 # Source0-md5:	ad8cf47918207872ba976f2b2e47c02b
+Patch0:		%{name}-python-install.patch
 URL:		http://www.freebsoft.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -59,6 +60,7 @@ Statyczna biblioteka speed-dispatcher.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__libtoolize}
@@ -68,11 +70,11 @@ Statyczna biblioteka speed-dispatcher.
 %{__automake}
 %configure \
 	%{?with_flite:--with-flite}%{!?with_flite:--without-flite} \
-	%{?with_ibmtts:--with-ibmtts}%{!?with_flite:--without-ibmtts} \
-	%{?with_espeak:--with-espeak}%{!?with_flite:--without-espeak} \
-	%{?with_nas:--with-nas}%{!?with_flite:--without-nas} \
-	%{?with_alsa:--with-alsa}%{!?with_flite:--without-nas} \
-	%{?with_pulse:--with-pulse}%{!?with_flite:--without-pulse}
+	%{?with_ibmtts:--with-ibmtts}%{!?with_ibmtts:--without-ibmtts} \
+	%{?with_espeak:--with-espeak}%{!?with_espeak:--without-espeak} \
+	%{?with_nas:--with-nas}%{!?with_nas:--without-nas} \
+	%{?with_alsa:--with-alsa}%{!?with_alsa:--without-alsa} \
+	%{?with_pulse:--with-pulse}%{!?with_pulse:--without-pulse}
 
 %{__make}
 
