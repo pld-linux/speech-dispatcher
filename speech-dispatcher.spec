@@ -17,6 +17,7 @@ Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
 # Source0-md5:	ad8cf47918207872ba976f2b2e47c02b
 Patch0:		%{name}-python-install.patch
 URL:		http://www.freebsoft.org/
+Buildrequires:	libatomic_ops
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -89,19 +90,52 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS CREDITS ChangeLog NEWS README THANKS TODO
+%doc AUTHORS ChangeLog NEWS README TODO
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/lib*.so.*.*.*
-%{_datadir}/%{name}
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
 %{_includedir}/*
-%{_aclocaldir}/*.m4
-%{_pkgconfigdir}/*.pc
 
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/lib*.a
+
+# unpackaged:
+/etc/speech-dispatcher/clients/emacs.conf
+/etc/speech-dispatcher/clients/gnome-speech.conf
+/etc/speech-dispatcher/modules/apollo.conf
+/etc/speech-dispatcher/modules/cicero.conf
+/etc/speech-dispatcher/modules/dtk-generic.conf
+/etc/speech-dispatcher/modules/epos-generic.conf
+/etc/speech-dispatcher/modules/espeak-generic.conf
+/etc/speech-dispatcher/modules/espeak.conf
+/etc/speech-dispatcher/modules/festival.conf
+/etc/speech-dispatcher/modules/flite.conf
+/etc/speech-dispatcher/modules/ibmtts.conf
+/etc/speech-dispatcher/modules/llia_phon-generic.conf
+/etc/speech-dispatcher/speechd.conf
+/usr/lib/libspeechd.so.2
+/usr/lib/speech-dispatcher-modules/sd_cicero
+/usr/lib/speech-dispatcher-modules/sd_espeak
+/usr/lib/speech-dispatcher-modules/sd_festival
+/usr/lib/speech-dispatcher-modules/sd_generic
+/usr/lib/speech-dispatcher/libsdaudio.a
+/usr/lib/speech-dispatcher/libsdaudio.la
+/usr/lib/speech-dispatcher/libsdaudio.so
+/usr/lib/speech-dispatcher/libsdaudio.so.2
+/usr/lib/speech-dispatcher/libsdaudio.so.2.0.2
+/usr/share/info/spd-say.info.gz
+/usr/share/info/speech-dispatcher-cs.info.gz
+/usr/share/info/speech-dispatcher.info.gz
+/usr/share/info/ssip.info.gz
+/usr/share/python2.5/site-packages/speechd-0.3-py2.5.egg-info
+/usr/share/python2.5/site-packages/speechd/__init__.py
+/usr/share/python2.5/site-packages/speechd/__init__.pyc
+/usr/share/python2.5/site-packages/speechd/_test.py
+/usr/share/python2.5/site-packages/speechd/_test.pyc
+/usr/share/python2.5/site-packages/speechd/client.py
+/usr/share/python2.5/site-packages/speechd/client.pyc
