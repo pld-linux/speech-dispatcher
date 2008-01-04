@@ -5,21 +5,23 @@
 %bcond_without	nas
 %bcond_without	alsa
 %bcond_without	pulse
+%bcond_without	static_libs # don't build static librarie
 #
 Summary:	A device independent layer for speech synthesis
 #Summary(pl.UTF-8):	-
 Name:		speech-dispatcher
 Version:	0.6.5
-Release:	0.1
+Release:	0.2
 License:	GPL v2
 Group:		Applications
 Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
 # Source0-md5:	ad8cf47918207872ba976f2b2e47c02b
 Patch0:		%{name}-python-install.patch
 URL:		http://www.freebsoft.org/
-Buildrequires:	libatomic_ops
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	dotconf-devel
+Buildrequires:	libatomic_ops
 BuildRequires:	libtool
 %{?with_flite:Buildrequires:	flite-devel}
 %{?with_ibmtts:Buildrequires:	ibmtts-devel}
@@ -59,6 +61,19 @@ Static speed-dispatcher library.
 %description static -l pl.UTF-8
 Statyczna biblioteka speed-dispatcher.
 
+%package -n python-%{name}
+Summary:	Python library for communication with Speech Dispatcher
+#Summary(pl_PL.UTF-8):
+Group:		Libraries/Python
+%pyrequires_eq	python-modules
+
+%description -n python-%{name}
+Speech Dispatcher provides a device independent layer for speech
+synthesis. This package contains a Python library for communication
+with Speech Dispatcher.
+
+#description -n python-%{name} -l pl_PL.UTF-8
+
 %prep
 %setup -q
 %patch0 -p1
@@ -75,7 +90,8 @@ Statyczna biblioteka speed-dispatcher.
 	%{?with_espeak:--with-espeak}%{!?with_espeak:--without-espeak} \
 	%{?with_nas:--with-nas}%{!?with_nas:--without-nas} \
 	%{?with_alsa:--with-alsa}%{!?with_alsa:--without-alsa} \
-	%{?with_pulse:--with-pulse}%{!?with_pulse:--without-pulse}
+	%{?with_pulse:--with-pulse}%{!?with_pulse:--without-pulse} \
+	--enable-static=%{?with_static_libs:yes}%{!?with_static_libs:no}
 
 %{__make}
 
@@ -88,54 +104,55 @@ rm -rf $RPM_BUILD_ROOT
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+/sbin/ldconfig
+[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+
+%postun
+/sbin/ldconfig
+[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS README TODO
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/lib*.so.*.*.*
+%dir %{_libdir}/speech-dispatcher
+%attr(755,root,root) %{_libdir}/speech-dispatcher/lib*.so.*.*.*
+# XXX: ? below
+%attr(755,root,root) %{_libdir}/speech-dispatcher/lib*.so.[^.]
+%dir %{_sysconfdir}/speech-dispatcher
+%dir %{_sysconfdir}/speech-dispatcher/clients
+%dir %{_sysconfdir}/speech-dispatcher/modules
+%dir %{_libdir}/speech-dispatcher-modules
+%{_libdir}/speech-dispatcher-modules/sd_cicero
+%{_libdir}/speech-dispatcher-modules/sd_espeak
+%{_libdir}/speech-dispatcher-modules/sd_festival
+%{_libdir}/speech-dispatcher-modules/sd_generic
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/*.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/clients/*.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/*.conf
+%{_infodir}/spd-say.info.gz
+%lang(cs) %{_infodir}/speech-dispatcher-cs.info.gz
+%{_infodir}/speech-dispatcher.info.gz
+%{_infodir}/ssip.info.gz
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
+%{_libdir}/speech-dispatcher/lib*.so
+%{_libdir}/speech-dispatcher/lib*.la
 %{_includedir}/*
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/lib*.a
+%{_libdir}/speech-dispatcher/lib*.a
+%endif
 
-# unpackaged:
-/etc/speech-dispatcher/clients/emacs.conf
-/etc/speech-dispatcher/clients/gnome-speech.conf
-/etc/speech-dispatcher/modules/apollo.conf
-/etc/speech-dispatcher/modules/cicero.conf
-/etc/speech-dispatcher/modules/dtk-generic.conf
-/etc/speech-dispatcher/modules/epos-generic.conf
-/etc/speech-dispatcher/modules/espeak-generic.conf
-/etc/speech-dispatcher/modules/espeak.conf
-/etc/speech-dispatcher/modules/festival.conf
-/etc/speech-dispatcher/modules/flite.conf
-/etc/speech-dispatcher/modules/ibmtts.conf
-/etc/speech-dispatcher/modules/llia_phon-generic.conf
-/etc/speech-dispatcher/speechd.conf
-/usr/lib/libspeechd.so.2
-/usr/lib/speech-dispatcher-modules/sd_cicero
-/usr/lib/speech-dispatcher-modules/sd_espeak
-/usr/lib/speech-dispatcher-modules/sd_festival
-/usr/lib/speech-dispatcher-modules/sd_generic
-/usr/lib/speech-dispatcher/libsdaudio.a
-/usr/lib/speech-dispatcher/libsdaudio.la
-/usr/lib/speech-dispatcher/libsdaudio.so
-/usr/lib/speech-dispatcher/libsdaudio.so.2
-/usr/lib/speech-dispatcher/libsdaudio.so.2.0.2
-/usr/share/info/spd-say.info.gz
-/usr/share/info/speech-dispatcher-cs.info.gz
-/usr/share/info/speech-dispatcher.info.gz
-/usr/share/info/ssip.info.gz
-/usr/share/python2.5/site-packages/speechd-0.3-py2.5.egg-info
-/usr/share/python2.5/site-packages/speechd/__init__.py
-/usr/share/python2.5/site-packages/speechd/__init__.pyc
-/usr/share/python2.5/site-packages/speechd/_test.py
-/usr/share/python2.5/site-packages/speechd/_test.pyc
-/usr/share/python2.5/site-packages/speechd/client.py
-/usr/share/python2.5/site-packages/speechd/client.pyc
+%files -n python-%{name}
+%defattr(644,root,root,755)
+%dir %{py_sitescriptdir}/speechd
+%{py_sitescriptdir}/speechd/*.py[c]
