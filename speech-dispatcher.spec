@@ -125,10 +125,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/speech-dispatcher/clients
 %dir %{_sysconfdir}/speech-dispatcher/modules
 %dir %{_libdir}/speech-dispatcher-modules
-%{_libdir}/speech-dispatcher-modules/sd_cicero
-%{_libdir}/speech-dispatcher-modules/sd_espeak
-%{_libdir}/speech-dispatcher-modules/sd_festival
-%{_libdir}/speech-dispatcher-modules/sd_generic
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_cicero
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_festival
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_generic
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/*.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/clients/*.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/*.conf
