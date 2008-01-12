@@ -11,11 +11,13 @@ Summary:	A device independent layer for speech synthesis
 #Summary(pl.UTF-8):	-
 Name:		speech-dispatcher
 Version:	0.6.5
-Release:	0.2
+Release:	0.3
 License:	GPL v2
 Group:		Applications
 Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
 # Source0-md5:	ad8cf47918207872ba976f2b2e47c02b
+Source1:	%{name}.init
+Source2:	%{name}.sysconfig
 Patch0:		%{name}-python-install.patch
 URL:		http://www.freebsoft.org/
 BuildRequires:	autoconf
@@ -23,12 +25,16 @@ BuildRequires:	automake
 BuildRequires:	dotconf-devel
 Buildrequires:	libatomic_ops
 BuildRequires:	libtool
+BuildRequires:	rpmbuild(macros) >= 1.228
+Requires(post,preun):	/sbin/chkconfig
 %{?with_flite:Buildrequires:	flite-devel}
 %{?with_ibmtts:Buildrequires:	ibmtts-devel}
 %{?with_espeak:Buildrequires:	espeak-devel}
 %{?with_nas:Buildrequires:	nas-devel}
 %{?with_alsa:Buildrequires:	alsa-lib-devel}
 %{?with_pulse:Buildrequires:	pulseaudio-devel}
+Provides:	group(%{name})
+Provides:	user(%{name})
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -98,23 +104,46 @@ with Speech Dispatcher.
 %install
 rm -rf $RPM_BUILD_ROOT
 
+install -d $RPM_BUILD_ROOT/var/run/speech-dispatcher
+
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+install -D %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install -D %{SOURCE2}	$RPM_BUILD_ROOT/etc/sysconfig/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%pre
+%groupadd -g 223 %{name}
+%useradd -u 223 -g 223 -d /usr/share/empty -s /bin/false -c "%{name} user" %{name}
+
 %post
 /sbin/ldconfig
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+/sbin/chkconfig --add %{name}
+%service %{name} restart
+
+%preun
+if [ "$1" = "0" ]; then
+	%service %{name} stop
+	/sbin/chkconfig --del %{name}
+fi
 
 %postun
 /sbin/ldconfig
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+if [ "$1" = "0" ]; then
+	%userremove %{name}
+	%groupremove %{name}
+fi
 
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS README TODO
+%attr(754,root,root) /etc/rc.d/init.d/%{name}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/lib*.so.*.*.*
 %dir %{_libdir}/speech-dispatcher
@@ -132,6 +161,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/*.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/clients/*.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/*.conf
+%dir %attr(755,%{name},%{name}) /var/run/speech-dispatcher
 %{_infodir}/spd-say.info.gz
 %lang(cs) %{_infodir}/speech-dispatcher-cs.info.gz
 %{_infodir}/speech-dispatcher.info.gz

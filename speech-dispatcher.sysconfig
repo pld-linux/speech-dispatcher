@@ -1,0 +1,9 @@
+# Set nice level for speech-dispatcher
+SERVICE_RUN_NICE_LEVEL="+1"
+
+# LOGLEVEL=""
+# PORT=""
+# PIDFILE=""
+# RUNAS=""
+
+# vi:syn=sh

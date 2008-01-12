@@ -1,0 +1,118 @@
+#!/bin/sh
+#
+# speech-dispatcher	A device independent layer for speech synthesis
+#
+# chkconfig:	345 99 01
+#
+# description:	A device independent layer for speech synthesis.
+#
+# Id: template.init 9117 2007-11-28 20:28:39Z qboosh 
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# $ speech-dispatcher -h
+# Usage: speech-dispatcher [-{d|s}] [-l {1|2|3|4|5}] [-p=port] | [-v] | [-h]
+# Speech Dispatcher -- Common interface for Speech Synthesis (GNU GPL)
+# 
+# -d, --run-daemon     -      Run as a daemon
+# -s, --run-single     -      Run as single application
+# -l, --log-level      -      Set log level (1..5)
+# -p, --port           -      Specify a port number
+# -P, --pid-file       -      Set path to pid file
+# -C, --config-dir     -      Set path to configuration
+# -v, --version        -      Report version of this program
+# -h, --help           -      Print this info
+ 
+LOGLEVEL=""
+PORT=""
+PIDFILE=""
+RUNAS=""
+
+# Get service config - may override defaults
+[ -f /etc/sysconfig/speech-dispatcher ] && . /etc/sysconfig/speech-dispatcher
+
+start() {
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/speech-dispatcher ]; then
+		msg_starting speech-dispatcher
+		daemon --user ${RUNAS:-speech-dispatcher} \
+			"$SERVICE_RUN_NICE_LEVEL" \
+			speech-dispatcher --pid-file ${PIDFILE:-/var/run/speech-dispatcher/speech-dispatcher.pid} \
+		       	${LOGLEVEL:+--log-level $LOGLEVEL}
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/speech-dispatcher
+	else
+		msg_already_running speech-dispatcher
+	fi
+}
+
+stop() {
+	if [ -f /var/lock/subsys/speech-dispatcher ]; then
+		# Stop daemons.
+		msg_stopping speech-dispatcher
+		killproc speech-dispatcher
+		killproc --pidfile ${PIDFILE:-/var/run/speech-dispatcher/speech-dispatcher.pid} speech-dispatcher -TERM
+		rm -f /var/lock/subsys/speech-dispatcher
+	else
+		msg_not_running speech-dispatcher
+	fi
+}
+
+reload() {
+	if [ -f /var/lock/subsys/speech-dispatcher ]; then
+		msg_reloading speech-dispatcher
+		killproc speech-dispatcher -HUP
+		killproc --pidfile ${PIDFILE:-/var/run/speech-dispatcher/speech-dispatcher.pid} speech-dispatcher -HUP
+		RETVAL=$?
+	else
+		msg_not_running speech-dispatcher
+		RETVAL=7
+	fi
+}
+
+condrestart() {
+	if [ -f /var/lock/subsys/speech-dispatcher ]; then
+		stop
+		start
+	else
+		msg_not_running speech-dispatcher
+		RETVAL=$1
+	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
+	;;
+  restart)
+	stop
+	start
+	;;
+  try-restart)
+	condrestart 0
+	;;
+# include force-reload here if program allows reloading without restart
+# otherwise remove reload action and support force-reload as restart if running
+  reload|force-reload)
+  	reload
+	;;
+# use this one if program doesn't support reloading without restart
+  force-reload)
+	condrestart 7
+	;;
+  status)
+	status speech-dispatcher
+	RETVAL=$?
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|try-restart|reload|force-reload|status}"
+	exit 3
+esac
+
+exit $RETVAL
