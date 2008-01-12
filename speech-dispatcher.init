@@ -6,7 +6,7 @@
 #
 # description:	A device independent layer for speech synthesis.
 #
-# Id: template.init 9117 2007-11-28 20:28:39Z qboosh 
+# $Id: template.init 9117 2007-11-28 20:28:39Z qboosh 
 
 # Source function library
 . /etc/rc.d/init.d/functions
