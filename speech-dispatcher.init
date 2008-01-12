@@ -51,7 +51,6 @@ stop() {
 	if [ -f /var/lock/subsys/speech-dispatcher ]; then
 		# Stop daemons.
 		msg_stopping speech-dispatcher
-		killproc speech-dispatcher
 		killproc --pidfile ${PIDFILE:-/var/run/speech-dispatcher/speech-dispatcher.pid} speech-dispatcher -TERM
 		rm -f /var/lock/subsys/speech-dispatcher
 	else
@@ -62,7 +61,6 @@ stop() {
 reload() {
 	if [ -f /var/lock/subsys/speech-dispatcher ]; then
 		msg_reloading speech-dispatcher
-		killproc speech-dispatcher -HUP
 		killproc --pidfile ${PIDFILE:-/var/run/speech-dispatcher/speech-dispatcher.pid} speech-dispatcher -HUP
 		RETVAL=$?
 	else
@@ -97,14 +95,8 @@ case "$1" in
   try-restart)
 	condrestart 0
 	;;
-# include force-reload here if program allows reloading without restart
-# otherwise remove reload action and support force-reload as restart if running
   reload|force-reload)
   	reload
-	;;
-# use this one if program doesn't support reloading without restart
-  force-reload)
-	condrestart 7
 	;;
   status)
 	status speech-dispatcher
