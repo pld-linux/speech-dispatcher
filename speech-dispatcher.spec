@@ -162,10 +162,10 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/clients/*.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/*.conf
 %dir %attr(755,%{name},%{name}) /var/run/speech-dispatcher
-%{_infodir}/spd-say.info.gz
-%lang(cs) %{_infodir}/speech-dispatcher-cs.info.gz
-%{_infodir}/speech-dispatcher.info.gz
-%{_infodir}/ssip.info.gz
+%{_infodir}/spd-say.info*
+%lang(cs) %{_infodir}/speech-dispatcher-cs.info*
+%{_infodir}/speech-dispatcher.info*
+%{_infodir}/ssip.info*
 
 %files devel
 %defattr(644,root,root,755)
