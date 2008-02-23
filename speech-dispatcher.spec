@@ -10,12 +10,12 @@
 Summary:	A device independent layer for speech synthesis
 #Summary(pl.UTF-8):	-
 Name:		speech-dispatcher
-Version:	0.6.5
-Release:	0.3
+Version:	0.6.6
+Release:	0.1
 License:	GPL v2
 Group:		Applications
 Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
-# Source0-md5:	ad8cf47918207872ba976f2b2e47c02b
+# Source0-md5:	bbd7ebc5b0f1b3ec4d89ad66b20d5cea
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-python-install.patch

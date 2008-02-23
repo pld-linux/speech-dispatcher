@@ -1,37 +1,11 @@
-diff -Nur b.speech-dispatcher-0.6.5/configure.in n.speech-dispatcher-0.6.5/configure.in
---- b.speech-dispatcher-0.6.5/configure.in	2007-11-26 15:19:48.000000000 +0100
-+++ n.speech-dispatcher-0.6.5/configure.in	2008-01-03 19:20:58.000000000 +0100
-@@ -246,5 +246,5 @@
- AC_SUBST(LIB_SPD_REVISION)
- AC_SUBST(LIB_SPD_AGE)
+--- speech-dispatcher-0.6.6/src/python/Makefile.in~	2008-02-04 14:51:34.000000000 +0100
++++ speech-dispatcher-0.6.6/src/python/Makefile.in	2008-02-23 16:46:00.161824116 +0100
+@@ -5,7 +5,7 @@
  
--AC_OUTPUT([Makefile src/Makefile src/server/Makefile src/modules/Makefile src/c/Makefile src/c/api/Makefile src/c/clients/Makefile src/c/clients/say/Makefile src/c/clients/spdsend/Makefile src/tests/Makefile src/audio/Makefile config/Makefile config/modules/Makefile config/clients/Makefile doc/Makefile])
-+AC_OUTPUT([Makefile src/Makefile src/server/Makefile src/modules/Makefile src/c/Makefile src/c/api/Makefile src/c/clients/Makefile src/c/clients/say/Makefile src/c/clients/spdsend/Makefile src/tests/Makefile src/audio/Makefile config/Makefile config/modules/Makefile config/clients/Makefile doc/Makefile src/python/Makefile])
- 
-diff -Nur b.speech-dispatcher-0.6.5/src/python/Makefile.in n.speech-dispatcher-0.6.5/src/python/Makefile.in
---- b.speech-dispatcher-0.6.5/src/python/Makefile.in	1970-01-01 01:00:00.000000000 +0100
-+++ n.speech-dispatcher-0.6.5/src/python/Makefile.in	2008-01-03 19:26:41.000000000 +0100
-@@ -0,0 +1,23 @@
-+
-+all:
-+
-+install:
-+	if test -x /usr/bin/python; then \
-+		./setup.py install --prefix=@prefix@ --root=$(DESTDIR); \
-+	else \
-+	echo "ERROR: Python not found or something went wrong during setup.py --install ..., not installing speechd module"; \
-+	fi
-+
-+uninstall:
-+
-+clean:
-+	rm -f *.py[co]
-+	rm -rf build
-+
-+distclean: clean
-+
-+distdir:
-+
-+
-+check:
-+
+ install:
+ 	if test -x /usr/bin/python; then \
+-		./setup.py install --prefix=$(prefix); \
++		./setup.py install --prefix=$(prefix) --root=$(DESTDIR) ; \
+ 	else \
+ 	echo "Python not found, not installing speechd module"; \
+ 	fi
