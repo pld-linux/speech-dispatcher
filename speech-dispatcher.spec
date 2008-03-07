@@ -1,11 +1,11 @@
 # Conditional build:
-%bcond_with	flite
-%bcond_with	ibmtts
-%bcond_without	espeak
-%bcond_without	nas
-%bcond_without	alsa
-%bcond_without	pulse
-%bcond_without	static_libs # don't build static librarie
+%bcond_with	ibmtts # with support comercial, proprietary IBM TTS synthesizer for Linux 
+%bcond_without	flite # with flite support
+%bcond_without	espeak # with espeak support
+%bcond_without	nas # with NAS support
+%bcond_without	alsa # with ALSA supprot
+%bcond_without	pulse # with pulse support
+%bcond_without	static_libs # don't build static libraries
 #
 Summary:	A device independent layer for speech synthesis
 #Summary(pl.UTF-8):	-
