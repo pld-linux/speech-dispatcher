@@ -116,8 +116,8 @@ install -D %{SOURCE2}	$RPM_BUILD_ROOT/etc/sysconfig/%{name}
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-%groupadd -g 223 %{name}
-%useradd -u 223 -g 223 -G audio -d /usr/share/empty -s /bin/false -c "%{name} user" %{name}
+%groupadd -g 224 %{name}
+%useradd -u 224 -g 224 -G audio -d /usr/share/empty -s /bin/false -c "%{name} user" %{name}
 
 %post
 /sbin/ldconfig
