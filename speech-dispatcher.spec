@@ -11,7 +11,7 @@ Summary:	A device independent layer for speech synthesis
 #Summary(pl.UTF-8):	-
 Name:		speech-dispatcher
 Version:	0.6.6
-Release:	0.1
+Release:	1
 License:	GPL v2
 Group:		Applications
 Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
@@ -104,7 +104,7 @@ with Speech Dispatcher.
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT/var/run/speech-dispatcher
+install -d $RPM_BUILD_ROOT/var/{log,run}/speech-dispatcher
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -117,7 +117,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %pre
 %groupadd -g 223 %{name}
-%useradd -u 223 -g 223 -d /usr/share/empty -s /bin/false -c "%{name} user" %{name}
+%useradd -u 223 -g 223 -G audio -d /usr/share/empty -s /bin/false -c "%{name} user" %{name}
 
 %post
 /sbin/ldconfig
@@ -154,14 +154,12 @@ fi
 %dir %{_sysconfdir}/speech-dispatcher/clients
 %dir %{_sysconfdir}/speech-dispatcher/modules
 %dir %{_libdir}/speech-dispatcher-modules
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_cicero
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_festival
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_generic
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_*
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/*.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/clients/*.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/*.conf
 %dir %attr(755,%{name},%{name}) /var/run/speech-dispatcher
+%dir %attr(755,%{name},%{name}) /var/log/speech-dispatcher
 %{_infodir}/spd-say.info*
 %lang(cs) %{_infodir}/speech-dispatcher-cs.info*
 %{_infodir}/speech-dispatcher.info*
