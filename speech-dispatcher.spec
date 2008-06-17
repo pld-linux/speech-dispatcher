@@ -1,19 +1,20 @@
+#
 # Conditional build:
-%bcond_with	ibmtts # with support comercial, proprietary IBM TTS synthesizer for Linux 
-%bcond_without	flite # with flite support
-%bcond_without	espeak # with espeak support
-%bcond_without	nas # with NAS support
-%bcond_without	alsa # with ALSA supprot
-%bcond_without	pulse # with pulse support
-%bcond_without	static_libs # don't build static libraries
+%bcond_with	ibmtts		# commercial, proprietary IBM TTS synthesizer support
+%bcond_without	flite		# flite support
+%bcond_without	espeak		# espeak support
+%bcond_without	nas		# NAS support
+%bcond_without	alsa		# ALSA supprot
+%bcond_without	pulse		# pulse support
+%bcond_without	static_libs	# don't build static libraries
 #
 Summary:	A device independent layer for speech synthesis
-#Summary(pl.UTF-8):	-
+Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
 Version:	0.6.6
 Release:	1
 License:	GPL v2
-Group:		Applications
+Group:		Applications/Sound
 Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
 # Source0-md5:	bbd7ebc5b0f1b3ec4d89ad66b20d5cea
 Source1:	%{name}.init
@@ -26,13 +27,13 @@ BuildRequires:	dotconf-devel
 Buildrequires:	libatomic_ops
 BuildRequires:	libtool
 BuildRequires:	rpmbuild(macros) >= 1.228
-Requires(post,preun):	/sbin/chkconfig
+%{?with_alsa:Buildrequires:	alsa-lib-devel}
 %{?with_flite:Buildrequires:	flite-devel}
 %{?with_ibmtts:Buildrequires:	ibmtts-devel}
 %{?with_espeak:Buildrequires:	espeak-devel}
 %{?with_nas:Buildrequires:	nas-devel}
-%{?with_alsa:Buildrequires:	alsa-lib-devel}
 %{?with_pulse:Buildrequires:	pulseaudio-devel}
+Requires(post,preun):	/sbin/chkconfig
 Provides:	group(%{name})
 Provides:	user(%{name})
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -41,35 +42,37 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Speech Dispatcher provides a device independent layer for speech
 synthesis.
 
-#description -l pl.UTF-8
+%description -l pl.UTF-8
+Speech Dispatcher zapewnia niezależną od urządzenia warstwę
+obsługującą syntezę mowy.
 
 %package devel
-Summary:	Header files for speed-dispatcher library
-Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki speed-dispatcher
+Summary:	Header files for speech-dispatcher library
+Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki speech-dispatcher
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
-Header files for speed-dispatcher library.
+Header files for speech-dispatcher library.
 
 %description devel -l pl.UTF-8
-Pliki nagłówkowe biblioteki speed-dispatcher.
+Pliki nagłówkowe biblioteki speech-dispatcher.
 
 %package static
-Summary:	Static speed-dispatcher library
-Summary(pl.UTF-8):	Statyczna biblioteka speed-dispatcher
+Summary:	Static speech-dispatcher library
+Summary(pl.UTF-8):	Statyczna biblioteka speech-dispatcher
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
-Static speed-dispatcher library.
+Static speech-dispatcher library.
 
 %description static -l pl.UTF-8
-Statyczna biblioteka speed-dispatcher.
+Statyczna biblioteka speech-dispatcher.
 
 %package -n python-%{name}
 Summary:	Python library for communication with Speech Dispatcher
-#Summary(pl_PL.UTF-8):
+Summary(pl_PL.UTF-8):	Biblioteka Pythona do komunikacji ze Speech Dispatcherem
 Group:		Libraries/Python
 %pyrequires_eq	python-modules
 
@@ -78,7 +81,10 @@ Speech Dispatcher provides a device independent layer for speech
 synthesis. This package contains a Python library for communication
 with Speech Dispatcher.
 
-#description -n python-%{name} -l pl_PL.UTF-8
+%description -n python-%{name} -l pl_PL.UTF-8
+Speech Dispatcher zapewnia niezależną od urządzenia warstwę
+obsługującą syntezę mowy. Ten pakiet zawiera bibliotekę Pythona do
+komunikacji ze Speech Dispatcherem.
 
 %prep
 %setup -q
