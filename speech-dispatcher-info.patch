@@ -1,0 +1,55 @@
+--- speech-dispatcher-0.6.6/doc/spd-say.texi.orig	2008-01-28 14:19:18.000000000 +0100
++++ speech-dispatcher-0.6.6/doc/spd-say.texi	2008-06-17 20:57:13.566879399 +0200
+@@ -9,9 +9,8 @@
+ @set VERSION 0.4
+ 
+ @dircategory Sound
+-
+ @direntry
+-* Say for Speech Dispatcher: (spd-say).       Say.
++* Say for Speech Dispatcher: (spd-say).	Say
+ @end direntry
+ 
+ @titlepage
+--- speech-dispatcher-0.6.6/doc/speech-dispatcher-cs.texi.orig	2008-01-28 14:19:18.000000000 +0100
++++ speech-dispatcher-0.6.6/doc/speech-dispatcher-cs.texi	2008-06-17 20:57:00.996880597 +0200
+@@ -15,10 +15,8 @@
+ @include version-2.texi
+ 
+ @dircategory Sound
+-@dircategory Development
+-
+ @direntry
+-* Speech Dispatcher cs: (speechd-cs).     Speech Dispatcher (in Czech).
++* Speech Dispatcher cs: (speechd-cs).	Speech Dispatcher (in Czech)
+ @end direntry
+ 
+ @titlepage
+--- speech-dispatcher-0.6.6/doc/speech-dispatcher.texi.orig	2008-02-08 10:02:38.000000000 +0100
++++ speech-dispatcher-0.6.6/doc/speech-dispatcher.texi	2008-06-17 20:57:47.367501399 +0200
+@@ -13,10 +13,8 @@
+ @include version.texi
+ 
+ @dircategory Sound
+-@dircategory Development
+-
+ @direntry
+-* Speech Dispatcher: (speech-dispatcher).       Speech Dispatcher.
++* Speech Dispatcher: (speech-dispatcher).  Speech Dispatcher
+ @end direntry
+ 
+ @titlepage
+--- speech-dispatcher-0.6.6/doc/ssip.texi.orig	2008-01-28 14:19:19.000000000 +0100
++++ speech-dispatcher-0.6.6/doc/ssip.texi	2008-06-17 20:58:25.063331469 +0200
+@@ -11,10 +11,8 @@
+ @syncodeindex vr cp
+ 
+ @dircategory Sound
+-@dircategory Development
+-
+ @direntry
+-* SSIP: (ssip).       Speech Synthesis Interface Protocol.
++* SSIP: (ssip).				Speech Synthesis Interface Protocol
+ @end direntry
+ 
+ @titlepage
