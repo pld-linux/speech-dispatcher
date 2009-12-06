@@ -21,6 +21,7 @@ Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-python-install.patch
 Patch1:		%{name}-info.patch
+Patch2:		%{name}-gcc.patch
 URL:		http://www.freebsoft.org/
 %{?with_alsa:Buildrequires:	alsa-lib-devel}
 BuildRequires:	autoconf
@@ -115,6 +116,7 @@ komunikacji ze Speech Dispatcherem.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p0
 
 %build
 %{__libtoolize}
