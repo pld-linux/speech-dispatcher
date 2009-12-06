@@ -33,6 +33,7 @@ BuildRequires:	dotconf-devel
 Buildrequires:	libatomic_ops
 BuildRequires:	libtool
 %{?with_nas:Buildrequires:	nas-devel}
+BuildRequires:	pkgconfig
 %{?with_pulse:Buildrequires:	pulseaudio-devel}
 BuildRequires:	python-devel >= 1:2.5
 BuildRequires:	rpm-pythonprov
