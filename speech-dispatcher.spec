@@ -7,12 +7,13 @@
 %bcond_without	alsa		# ALSA audio output supprot
 %bcond_without	pulse		# pulse audio output support
 %bcond_without	static_libs	# don't build static libraries
+%bcond_without	ivona	# don't build ivona support
 #
 Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
 Version:	0.6.7
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/Sound
 Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
@@ -23,18 +24,19 @@ Patch0:		%{name}-python-install.patch
 Patch1:		%{name}-info.patch
 Patch2:		%{name}-gcc.patch
 URL:		http://www.freebsoft.org/
-%{?with_alsa:Buildrequires:	alsa-lib-devel}
+%{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	dotconf-devel
-%{?with_espeak:Buildrequires:	espeak-devel}
-%{?with_flite:Buildrequires:	flite-devel}
-%{?with_ibmtts:Buildrequires:	ibmtts-devel}
-Buildrequires:	libatomic_ops
+%{?with_espeak:BuildRequires:	espeak-devel}
+%{?with_flite:BuildRequires:	flite-devel}
+%{?with_ibmtts:BuildRequires:	ibmtts-devel}
+BuildRequires:	libatomic_ops
 BuildRequires:	libtool
-%{?with_nas:Buildrequires:	nas-devel}
+%{?with_ivona:BuildRequires:	libdumbtts-devel}
+%{?with_nas:BuildRequires:	nas-devel}
 BuildRequires:	pkgconfig
-%{?with_pulse:Buildrequires:	pulseaudio-devel}
+%{?with_pulse:BuildRequires:	pulseaudio-devel}
 BuildRequires:	python-devel >= 1:2.5
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
@@ -132,6 +134,7 @@ komunikacji ze Speech Dispatcherem.
 	%{?with_nas:--with-nas}%{!?with_nas:--without-nas} \
 	%{?with_alsa:--with-alsa}%{!?with_alsa:--without-alsa} \
 	%{?with_pulse:--with-pulse}%{!?with_pulse:--without-pulse} \
+	%{?with_ivona:--with-ivona}%{!?with_ivona:--without-ivona} \
 	--enable-static=%{?with_static_libs:yes}%{!?with_static_libs:no}
 
 %{__make}
