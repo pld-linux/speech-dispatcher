@@ -13,7 +13,7 @@ Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
 Version:	0.6.7
-Release:	2
+Release:	3
 License:	GPL v2
 Group:		Applications/Sound
 Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
