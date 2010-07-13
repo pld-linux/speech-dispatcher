@@ -5,7 +5,7 @@
 %bcond_without	espeak		# espeak synthetizer support
 %bcond_without	nas		# NAS audio output support
 %bcond_without	alsa		# ALSA audio output supprot
-%bcond_without	pulse		# pulse audio output support
+%bcond_without	pulseaudio		# pulse audio output support
 %bcond_without	static_libs	# don't build static libraries
 %bcond_without	ivona	# don't build ivona support
 #
@@ -32,22 +32,22 @@ BuildRequires:	dotconf-devel
 %{?with_flite:BuildRequires:	flite-devel}
 %{?with_ibmtts:BuildRequires:	ibmtts-devel}
 BuildRequires:	libatomic_ops
-BuildRequires:	libtool
 %{?with_ivona:BuildRequires:	libdumbtts-devel}
+BuildRequires:	libtool
 %{?with_nas:BuildRequires:	nas-devel}
 BuildRequires:	pkgconfig
-%{?with_pulse:BuildRequires:	pulseaudio-devel}
+%{?with_pulseaudio:BuildRequires:	pulseaudio-devel}
 BuildRequires:	python-devel >= 1:2.5
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	texinfo
+Requires(post,preun):	/sbin/chkconfig
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
-Requires(post,preun):	/sbin/chkconfig
-Requires(postun):	/usr/sbin/groupdel
-Requires(postun):	/usr/sbin/userdel
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	rc-scripts
 Provides:	group(%{name})
@@ -133,7 +133,7 @@ komunikacji ze Speech Dispatcherem.
 	%{?with_espeak:--with-espeak}%{!?with_espeak:--without-espeak} \
 	%{?with_nas:--with-nas}%{!?with_nas:--without-nas} \
 	%{?with_alsa:--with-alsa}%{!?with_alsa:--without-alsa} \
-	%{?with_pulse:--with-pulse}%{!?with_pulse:--without-pulse} \
+	%{?with_pulseaudio:--with-pulse}%{!?with_pulseaudio:--without-pulse} \
 	%{?with_ivona:--with-ivona}%{!?with_ivona:--without-ivona} \
 	--enable-static=%{?with_static_libs:yes}%{!?with_static_libs:no}
 
