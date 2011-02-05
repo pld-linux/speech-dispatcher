@@ -101,7 +101,7 @@ Statyczna biblioteka speech-dispatcher.
 
 %package -n python-%{name}
 Summary:	Python library for communication with Speech Dispatcher
-Summary(pl_PL.UTF-8):	Biblioteka Pythona do komunikacji ze Speech Dispatcherem
+Summary(pl.UTF-8):	Biblioteka Pythona do komunikacji ze Speech Dispatcherem
 Group:		Libraries/Python
 %pyrequires_eq	python-modules
 
@@ -110,7 +110,7 @@ Speech Dispatcher provides a device independent layer for speech
 synthesis. This package contains a Python library for communication
 with Speech Dispatcher.
 
-%description -n python-%{name} -l pl_PL.UTF-8
+%description -n python-%{name} -l pl.UTF-8
 Speech Dispatcher zapewnia niezależną od urządzenia warstwę
 obsługującą syntezę mowy. Ten pakiet zawiera bibliotekę Pythona do
 komunikacji ze Speech Dispatcherem.
