@@ -5,24 +5,23 @@
 %bcond_without	espeak		# espeak synthetizer support
 %bcond_without	nas		# NAS audio output support
 %bcond_without	alsa		# ALSA audio output supprot
-%bcond_without	pulseaudio		# pulse audio output support
+%bcond_without	pulseaudio	# pulse audio output support
 %bcond_without	static_libs	# don't build static libraries
-%bcond_without	ivona	# don't build ivona support
+%bcond_without	ivona		# don't build ivona support
 #
 Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
-Version:	0.6.7
-Release:	3
+Version:	0.7.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Sound
 Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
-# Source0-md5:	67432ad655b50fd7c1f1f79e012cfe3f
+# Source0-md5:	ccfc30ac006673d36b4223eb760ed696
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
-Patch0:		%{name}-python-install.patch
-Patch1:		%{name}-info.patch
-Patch2:		%{name}-gcc.patch
+Patch0:		%{name}-info.patch
+Patch1:		pulse.patch
 URL:		http://www.freebsoft.org/
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	autoconf
@@ -119,7 +118,6 @@ komunikacji ze Speech Dispatcherem.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p0
 
 %build
 %{__libtoolize}
@@ -128,14 +126,14 @@ komunikacji ze Speech Dispatcherem.
 %{__autoheader}
 %{__automake}
 %configure \
-	%{?with_flite:--with-flite}%{!?with_flite:--without-flite} \
-	%{?with_ibmtts:--with-ibmtts}%{!?with_ibmtts:--without-ibmtts} \
-	%{?with_espeak:--with-espeak}%{!?with_espeak:--without-espeak} \
-	%{?with_nas:--with-nas}%{!?with_nas:--without-nas} \
-	%{?with_alsa:--with-alsa}%{!?with_alsa:--without-alsa} \
-	%{?with_pulseaudio:--with-pulse}%{!?with_pulseaudio:--without-pulse} \
-	%{?with_ivona:--with-ivona}%{!?with_ivona:--without-ivona} \
-	--enable-static=%{?with_static_libs:yes}%{!?with_static_libs:no}
+	%{__with_without flite} \
+	%{__with_without ibmtts} \
+	%{__with_without espeak} \
+	%{__with_without nas} \
+	%{__with_without alsa} \
+	%{__with_without pulseaudio pulse} \
+	%{__with_without ivona} \
+	%{__enable_disable static_libs static}
 
 %{__make}
 
@@ -188,21 +186,48 @@ fi
 %doc AUTHORS ChangeLog NEWS README TODO
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/clibrary
+%attr(755,root,root) %{_bindir}/clibrary2
+%attr(755,root,root) %{_bindir}/connection_recovery
+%attr(755,root,root) %{_bindir}/long_message
+%attr(755,root,root) %{_bindir}/run_test
+%attr(755,root,root) %{_bindir}/spd-conf
+%attr(755,root,root) %{_bindir}/spd-say
+%attr(755,root,root) %{_bindir}/spdsend
+%attr(755,root,root) %{_bindir}/speech-dispatcher
 %dir %{_libdir}/speech-dispatcher
 %attr(755,root,root) %{_libdir}/speech-dispatcher/libsdaudio.so.*
 %dir %{_sysconfdir}/speech-dispatcher
 %dir %{_sysconfdir}/speech-dispatcher/clients
 %dir %{_sysconfdir}/speech-dispatcher/modules
 %dir %{_libdir}/speech-dispatcher-modules
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_*
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/*.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/clients/*.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/*.conf
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_cicero
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_dummy
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_festival
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_flite
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_generic
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_ivona
+%{_datadir}/speech-dispatcher
+%{_datadir}/sounds/speech-dispatcher
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/speechd.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/clients/emacs.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/clients/gnome-speech.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/cicero.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/dtk-generic.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/epos-generic.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-generic.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-mbrola-generic.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/festival.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/flite.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/ibmtts.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/ivona.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/llia_phon-generic.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/swift-generic.conf
 %dir %attr(755,%{name},%{name}) /var/run/speech-dispatcher
 %dir %attr(755,%{name},%{name}) /var/log/speech-dispatcher
 %{_infodir}/spd-say.info*
-%lang(cs) %{_infodir}/speech-dispatcher-cs.info*
 %{_infodir}/speech-dispatcher.info*
 %{_infodir}/ssip.info*
 
@@ -225,6 +250,7 @@ fi
 
 %files -n python-%{name}
 %defattr(644,root,root,755)
-%dir %{py_sitescriptdir}/speechd
-%{py_sitescriptdir}/speechd/*.py[co]
-%{py_sitescriptdir}/speechd-*.egg-info
+%dir %{py_sitedir}/speechd
+%dir %{py_sitedir}/speechd_config
+%{py_sitedir}/speechd/*.py[co]
+%{py_sitedir}/speechd_config/*.py[co]
