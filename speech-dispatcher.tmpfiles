@@ -1,0 +1,1 @@
+d /var/run/speech-dispatcher 0755 speech-dispatcher speech-dispatcher -
