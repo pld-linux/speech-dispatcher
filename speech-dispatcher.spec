@@ -20,6 +20,7 @@ Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
 # Source0-md5:	ccfc30ac006673d36b4223eb760ed696
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
+Source3:	%{name}.tmpfiles
 Patch0:		%{name}-info.patch
 Patch1:		pulse.patch
 URL:		http://www.freebsoft.org/
@@ -139,14 +140,15 @@ komunikacji ze Speech Dispatcherem.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
-install -d $RPM_BUILD_ROOT/var/{log,run}/speech-dispatcher
+install -d $RPM_BUILD_ROOT/var/{log,run}/speech-dispatcher \
+	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 install -D %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install -D %{SOURCE2}	$RPM_BUILD_ROOT/etc/sysconfig/%{name}
+install %{SOURCE3} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
 
 %py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}/speechd
 %py_postclean
@@ -227,6 +229,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/swift-generic.conf
 %dir %attr(755,%{name},%{name}) /var/run/speech-dispatcher
 %dir %attr(755,%{name},%{name}) /var/log/speech-dispatcher
+/usr/lib/tmpfiles.d/%{name}.conf
 %{_infodir}/spd-say.info*
 %{_infodir}/speech-dispatcher.info*
 %{_infodir}/ssip.info*
