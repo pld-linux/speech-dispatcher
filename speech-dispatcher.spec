@@ -205,11 +205,17 @@ fi
 %dir %{_libdir}/speech-dispatcher-modules
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_cicero
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_dummy
+%if %{with espeak}
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak
+%endif
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_festival
+%if %{with flite}
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_flite
+%endif
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_generic
+%if %{with ivona}
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_ivona
+%endif
 %{_datadir}/speech-dispatcher
 %{_datadir}/sounds/speech-dispatcher
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/speechd.conf
