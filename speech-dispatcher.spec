@@ -153,7 +153,7 @@ install %{SOURCE3} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
 %py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}/speechd
 %py_postclean
 # library for engines output, API not included in -devel
-rm $RPM_BUILD_ROOT%{_libdir}/speech-dispatcher/libsdaudio.{so,la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/speech-dispatcher/libsdaudio.{so,la,a}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -213,6 +213,9 @@ fi
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_flite
 %endif
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_generic
+%if %{with ibmtts}
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_ibmtts
+%endif
 %if %{with ivona}
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_ivona
 %endif
