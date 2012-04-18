@@ -28,11 +28,14 @@ URL:		http://www.freebsoft.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	dotconf-devel
+BuildRequires:	glib2-devel >= 2.0
 %{?with_espeak:BuildRequires:	espeak-devel}
 %{?with_flite:BuildRequires:	flite-devel}
 %{?with_ibmtts:BuildRequires:	ibmtts-devel}
 BuildRequires:	libatomic_ops
 %{?with_ivona:BuildRequires:	libdumbtts-devel}
+BuildRequires:	libao-devel
+BuildRequires:	libsndfile-devel >= 1.0.2
 BuildRequires:	libtool
 %{?with_nas:BuildRequires:	nas-devel}
 BuildRequires:	pkgconfig
@@ -49,6 +52,7 @@ Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	libsndfile >= 1.0.2
 Requires:	rc-scripts
 Provides:	group(%{name})
 Provides:	user(%{name})
@@ -80,6 +84,7 @@ Summary:	Header files for speech-dispatcher library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki speech-dispatcher
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	glib2-devel >= 2.0
 
 %description devel
 Header files for speech-dispatcher library.
