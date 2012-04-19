@@ -1,13 +1,13 @@
 #
 # Conditional build:
-%bcond_with	ibmtts		# commercial, proprietary IBM TTS synthesizer support
-%bcond_without	flite		# flite synthetizer support
-%bcond_without	espeak		# espeak synthetizer support
-%bcond_without	nas		# NAS audio output support
+%bcond_with	ibmtts		# commercial, proprietary IBM TTS synthetizer support
+%bcond_without	espeak		# eSpeak synthetizer support
+%bcond_without	flite		# Flite synthetizer support
+%bcond_without	ivona		# Ivona synthetizer support
 %bcond_without	alsa		# ALSA audio output supprot
+%bcond_without	nas		# NAS audio output support
 %bcond_without	pulseaudio	# pulse audio output support
 %bcond_without	static_libs	# don't build static libraries
-%bcond_without	ivona		# don't build ivona support
 #
 Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
@@ -23,6 +23,7 @@ Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
 Patch0:		%{name}-info.patch
 Patch1:		pulse.patch
+Patch2:		%{name}-config.patch
 URL:		http://www.freebsoft.org/
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	autoconf
@@ -65,6 +66,54 @@ synthesis.
 %description -l pl.UTF-8
 Speech Dispatcher zapewnia niezależną od urządzenia warstwę
 obsługującą syntezę mowy.
+
+%package module-espeak
+Summary:	eSpeak synthetizer module for Speech Dispatcher
+Summary(pl.UTF-8):	Moduł syntezatora eSpeak dla Speech Dispatchera
+Group:		Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+
+%description module-espeak
+eSpeak synthetizer module for Speech Dispatcher.
+
+%description module-espeak -l pl.UTF-8
+Moduł syntezatora eSpeak dla Speech Dispatchera.
+
+%package module-flite
+Summary:	Flite synthetizer module for Speech Dispatcher
+Summary(pl.UTF-8):	Moduł syntezatora Flite dla Speech Dispatchera
+Group:		Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+
+%description module-flite
+Flite synthetizer module for Speech Dispatcher.
+
+%description module-flite -l pl.UTF-8
+Moduł syntezatora Flite dla Speech Dispatchera.
+
+%package module-ibmtts
+Summary:	IBM TTS synthetizer module for Speech Dispatcher
+Summary(pl.UTF-8):	Moduł syntezatora IBM TTS dla Speech Dispatchera
+Group:		Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+
+%description module-ibmtts
+IBM TTS synthetizer module for Speech Dispatcher.
+
+%description module-ibmtts -l pl.UTF-8
+Moduł syntezatora IBM TTS dla Speech Dispatchera.
+
+%package module-ivona
+Summary:	Ivona synthetizer module for Speech Dispatcher
+Summary(pl.UTF-8):	Moduł syntezatora Ivona dla Speech Dispatchera
+Group:		Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+
+%description module-ivona
+Ivona synthetizer module for Speech Dispatcher.
+
+%description module-ivona -l pl.UTF-8
+Moduł syntezatora Ivona dla Speech Dispatchera.
 
 %package libs
 Summary:	Speech Dispatcher client library
@@ -124,6 +173,7 @@ komunikacji ze Speech Dispatcherem.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__libtoolize}
@@ -210,20 +260,8 @@ fi
 %dir %{_libdir}/speech-dispatcher-modules
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_cicero
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_dummy
-%if %{with espeak}
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak
-%endif
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_festival
-%if %{with flite}
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_flite
-%endif
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_generic
-%if %{with ibmtts}
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_ibmtts
-%endif
-%if %{with ivona}
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_ivona
-%endif
 %{_datadir}/speech-dispatcher
 %{_datadir}/sounds/speech-dispatcher
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/speechd.conf
@@ -234,11 +272,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/epos-generic.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-generic.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-mbrola-generic.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/festival.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/flite.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/ibmtts.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/ivona.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/llia_phon-generic.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/swift-generic.conf
 %dir %attr(755,%{name},%{name}) /var/run/speech-dispatcher
@@ -247,6 +281,34 @@ fi
 %{_infodir}/spd-say.info*
 %{_infodir}/speech-dispatcher.info*
 %{_infodir}/ssip.info*
+
+%if %{with espeak}
+%files module-espeak
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak.conf
+%endif
+
+%if %{with flite}
+%files module-flite
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_flite
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/flite.conf
+%endif
+
+%if %{with ibmtts}
+%files module-ibmtts
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_ibmtts
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/ibmtts.conf
+%endif
+
+%if %{with ivona}
+%files module-ivona
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_ivona
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/ivona.conf
+%endif
 
 %files libs
 %defattr(644,root,root,755)
