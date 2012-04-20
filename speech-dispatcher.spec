@@ -1,9 +1,9 @@
 #
 # Conditional build:
-%bcond_with	ibmtts		# commercial, proprietary IBM TTS synthetizer support
-%bcond_without	espeak		# eSpeak synthetizer support
-%bcond_without	flite		# Flite synthetizer support
-%bcond_without	ivona		# Ivona synthetizer support
+%bcond_with	ibmtts		# commercial, proprietary IBM TTS synthesizer support
+%bcond_without	espeak		# eSpeak synthesizer support
+%bcond_without	flite		# Flite synthesizer support
+%bcond_without	ivona		# Ivona synthesizer support
 %bcond_without	alsa		# ALSA audio output supprot
 %bcond_without	nas		# NAS audio output support
 %bcond_without	pulseaudio	# pulse audio output support
@@ -68,49 +68,49 @@ Speech Dispatcher zapewnia niezależną od urządzenia warstwę
 obsługującą syntezę mowy.
 
 %package module-espeak
-Summary:	eSpeak synthetizer module for Speech Dispatcher
+Summary:	eSpeak synthesizer module for Speech Dispatcher
 Summary(pl.UTF-8):	Moduł syntezatora eSpeak dla Speech Dispatchera
 Group:		Applications/Sound
 Requires:	%{name} = %{version}-%{release}
 
 %description module-espeak
-eSpeak synthetizer module for Speech Dispatcher.
+eSpeak synthesizer module for Speech Dispatcher.
 
 %description module-espeak -l pl.UTF-8
 Moduł syntezatora eSpeak dla Speech Dispatchera.
 
 %package module-flite
-Summary:	Flite synthetizer module for Speech Dispatcher
+Summary:	Flite synthesizer module for Speech Dispatcher
 Summary(pl.UTF-8):	Moduł syntezatora Flite dla Speech Dispatchera
 Group:		Applications/Sound
 Requires:	%{name} = %{version}-%{release}
 
 %description module-flite
-Flite synthetizer module for Speech Dispatcher.
+Flite synthesizer module for Speech Dispatcher.
 
 %description module-flite -l pl.UTF-8
 Moduł syntezatora Flite dla Speech Dispatchera.
 
 %package module-ibmtts
-Summary:	IBM TTS synthetizer module for Speech Dispatcher
+Summary:	IBM TTS synthesizer module for Speech Dispatcher
 Summary(pl.UTF-8):	Moduł syntezatora IBM TTS dla Speech Dispatchera
 Group:		Applications/Sound
 Requires:	%{name} = %{version}-%{release}
 
 %description module-ibmtts
-IBM TTS synthetizer module for Speech Dispatcher.
+IBM TTS synthesizer module for Speech Dispatcher.
 
 %description module-ibmtts -l pl.UTF-8
 Moduł syntezatora IBM TTS dla Speech Dispatchera.
 
 %package module-ivona
-Summary:	Ivona synthetizer module for Speech Dispatcher
+Summary:	Ivona synthesizer module for Speech Dispatcher
 Summary(pl.UTF-8):	Moduł syntezatora Ivona dla Speech Dispatchera
 Group:		Applications/Sound
 Requires:	%{name} = %{version}-%{release}
 
 %description module-ivona
-Ivona synthetizer module for Speech Dispatcher.
+Ivona synthesizer module for Speech Dispatcher.
 
 %description module-ivona -l pl.UTF-8
 Moduł syntezatora Ivona dla Speech Dispatchera.
