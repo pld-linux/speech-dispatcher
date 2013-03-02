@@ -1,11 +1,11 @@
 # TODO: think about default configuration (DefaultModule is espeak, which is not loaded by default)
-# TODO: svox/libttspico
 #
 # Conditional build:
 %bcond_with	ibmtts		# IBM TTS synthesizer support (commercial, proprietary)
 %bcond_without	espeak		# eSpeak synthesizer support
 %bcond_without	flite		# Flite synthesizer support
 %bcond_without	ivona		# Ivona synthesizer support
+%bcond_without	svox		# SVOX Pico synthesizer support
 %bcond_without	alsa		# ALSA audio output supprot
 %bcond_without	libao		# libao audio output supprot
 %bcond_without	nas		# NAS audio output support
@@ -47,6 +47,7 @@ BuildRequires:	pkgconfig
 %{?with_python:BuildRequires:	python3-devel >= 1:3.2}
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.527
+%{?with_svox:BuildRequires:	svox-devel}
 BuildRequires:	texinfo
 %{?with_nas:BuildRequires:	xorg-lib-libXau-devel}
 Requires(post,preun):	/sbin/chkconfig
@@ -156,6 +157,18 @@ Ivona synthesizer module for Speech Dispatcher.
 %description module-ivona -l pl.UTF-8
 Moduł syntezatora Ivona dla Speech Dispatchera.
 
+%package module-pico
+Summary:	SVOX Pico synthesizer module for Speech Dispatcher
+Summary(pl.UTF-8):	Moduł syntezatora SVOX Pico dla Speech Dispatchera
+Group:		Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+
+%description module-pico
+SVOX Pico synthesizer module for Speech Dispatcher.
+
+%description module-pico -l pl.UTF-8
+Moduł syntezatora SVOX Pico dla Speech Dispatchera.
+
 %package libs
 Summary:	Speech Dispatcher client library
 Summary(pl.UTF-8):	Biblioteka kliencka Speech Dispatchera
@@ -233,7 +246,8 @@ komunikacji ze Speech Dispatcherem.
 	%{__with_without ivona} \
 	%{__with_without libao} \
 	%{__with_without nas} \
-	%{__with_without pulseaudio pulse}
+	%{__with_without pulseaudio pulse} \
+	%{__with_without svox pico}
 
 %{__make}
 
@@ -371,6 +385,13 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_ivona
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/ivona.conf
+%endif
+
+%if %{with svox}
+%files module-pico
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_pico
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/pico.conf
 %endif
 
 %files libs
