@@ -1,50 +1,54 @@
+# TODO: think about default configuration (DefaultModule is espeak, which is not loaded by default)
+# TODO: svox/libttspico
 #
 # Conditional build:
-%bcond_with	ibmtts		# commercial, proprietary IBM TTS synthesizer support
+%bcond_with	ibmtts		# IBM TTS synthesizer support (commercial, proprietary)
 %bcond_without	espeak		# eSpeak synthesizer support
 %bcond_without	flite		# Flite synthesizer support
 %bcond_without	ivona		# Ivona synthesizer support
 %bcond_without	alsa		# ALSA audio output supprot
+%bcond_without	libao		# libao audio output supprot
 %bcond_without	nas		# NAS audio output support
 %bcond_without	pulseaudio	# pulse audio output support
+%bcond_without	python		# Python 3 binding (python 2.x no longer supported)
 %bcond_without	static_libs	# don't build static libraries
 #
 Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
-Version:	0.7.1
-Release:	2
+Version:	0.8
+Release:	1
 License:	GPL v2
 Group:		Applications/Sound
 Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
-# Source0-md5:	ccfc30ac006673d36b4223eb760ed696
+# Source0-md5:	d88691a64c676122f996230c107c392f
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
 Patch0:		%{name}-info.patch
-Patch1:		pulse.patch
-Patch2:		%{name}-config.patch
 URL:		http://www.freebsoft.org/
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake
-BuildRequires:	dotconf-devel
-BuildRequires:	glib2-devel >= 2.0
+BuildRequires:	dotconf-devel >= 1.3
 %{?with_espeak:BuildRequires:	espeak-devel}
+BuildRequires:	glib2-devel >= 1:2.28
 %{?with_flite:BuildRequires:	flite-devel}
 %{?with_ibmtts:BuildRequires:	ibmtts-devel}
+BuildRequires:	intltool >= 0.40.0
 BuildRequires:	libatomic_ops
 %{?with_ivona:BuildRequires:	libdumbtts-devel}
-BuildRequires:	libao-devel
+%{?with_libao:BuildRequires:	libao-devel}
 BuildRequires:	libsndfile-devel >= 1.0.2
-BuildRequires:	libtool
+BuildRequires:	libtool >= 2:2.2
 %{?with_nas:BuildRequires:	nas-devel}
 BuildRequires:	pkgconfig
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel}
-BuildRequires:	python-devel >= 1:2.5
+%{?with_python:BuildRequires:	python3-devel >= 1:3.2}
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.527
 BuildRequires:	texinfo
+%{?with_nas:BuildRequires:	xorg-lib-libXau-devel}
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
@@ -53,6 +57,7 @@ Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	dotconf >= 1.3
 Requires:	libsndfile >= 1.0.2
 Requires:	rc-scripts
 Provides:	group(%{name})
@@ -66,6 +71,42 @@ synthesis.
 %description -l pl.UTF-8
 Speech Dispatcher zapewnia niezależną od urządzenia warstwę
 obsługującą syntezę mowy.
+
+%package audio-libao
+Summary:	libao audio output module for Speech Dispatcher
+Summary(pl.UTF-8):	Moduł wyjścia dźwięku libao dla Speech Dispatchera
+Group:		Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+
+%description audio-libao
+libao audio output module for Speech Dispatcher.
+
+%description audio-libao -l pl.UTF-8
+Moduł wyjścia dźwięku libao dla Speech Dispatchera.
+
+%package audio-nas
+Summary:	NAS audio output module for Speech Dispatcher
+Summary(pl.UTF-8):	Moduł wyjścia dźwięku NAS dla Speech Dispatchera
+Group:		Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+
+%description audio-nas
+NAS audio output module for Speech Dispatcher.
+
+%description audio-nas -l pl.UTF-8
+Moduł wyjścia dźwięku NAS dla Speech Dispatchera.
+
+%package audio-pulse
+Summary:	PulseAudio audio output module for Speech Dispatcher
+Summary(pl.UTF-8):	Moduł wyjścia dźwięku PulseAudio dla Speech Dispatchera
+Group:		Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+
+%description audio-pulse
+PulseAudio audio output module for Speech Dispatcher.
+
+%description audio-pulse -l pl.UTF-8
+Moduł wyjścia dźwięku PulseAudio dla Speech Dispatchera.
 
 %package module-espeak
 Summary:	eSpeak synthesizer module for Speech Dispatcher
@@ -119,6 +160,7 @@ Moduł syntezatora Ivona dla Speech Dispatchera.
 Summary:	Speech Dispatcher client library
 Summary(pl.UTF-8):	Biblioteka kliencka Speech Dispatchera
 Group:		Libraries
+Requires:	glib2 >= 1:2.28
 
 %description libs
 Speech Dispatcher provides a device independent layer for speech
@@ -133,7 +175,7 @@ Summary:	Header files for speech-dispatcher library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki speech-dispatcher
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	glib2-devel >= 2.0
+Requires:	glib2-devel >= 1:2.28
 
 %description devel
 Header files for speech-dispatcher library.
@@ -153,27 +195,26 @@ Static speech-dispatcher library.
 %description static -l pl.UTF-8
 Statyczna biblioteka speech-dispatcher.
 
-%package -n python-%{name}
-Summary:	Python library for communication with Speech Dispatcher
-Summary(pl.UTF-8):	Biblioteka Pythona do komunikacji ze Speech Dispatcherem
+%package -n python3-%{name}
+Summary:	Python 3 library for communication with Speech Dispatcher
+Summary(pl.UTF-8):	Biblioteka Pythona 3 do komunikacji ze Speech Dispatcherem
 Group:		Libraries/Python
-%pyrequires_eq	python-modules
+Requires:	python3-modules
+Obsoletes:	python-speech-dispatcher
 
-%description -n python-%{name}
+%description -n python3-%{name}
 Speech Dispatcher provides a device independent layer for speech
-synthesis. This package contains a Python library for communication
+synthesis. This package contains a Python 3 library for communication
 with Speech Dispatcher.
 
-%description -n python-%{name} -l pl.UTF-8
+%description -n python3-%{name} -l pl.UTF-8
 Speech Dispatcher zapewnia niezależną od urządzenia warstwę
-obsługującą syntezę mowy. Ten pakiet zawiera bibliotekę Pythona do
+obsługującą syntezę mowy. Ten pakiet zawiera bibliotekę Pythona 3 do
 komunikacji ze Speech Dispatcherem.
 
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
 %{__libtoolize}
@@ -182,14 +223,17 @@ komunikacji ze Speech Dispatcherem.
 %{__autoheader}
 %{__automake}
 %configure \
+	%{__disable python} \
+	%{__enable_disable static_libs static} \
+	%{__with_without alsa} \
+	--with-default-audio-method=%{?with_alsa:alsa}%{!?with_alsa:oss} \
+	%{__with_without espeak} \
 	%{__with_without flite} \
 	%{__with_without ibmtts} \
-	%{__with_without espeak} \
-	%{__with_without nas} \
-	%{__with_without alsa} \
-	%{__with_without pulseaudio pulse} \
 	%{__with_without ivona} \
-	%{__enable_disable static_libs static}
+	%{__with_without libao} \
+	%{__with_without nas} \
+	%{__with_without pulseaudio pulse}
 
 %{__make}
 
@@ -205,10 +249,15 @@ install -D %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install -D %{SOURCE2}	$RPM_BUILD_ROOT/etc/sysconfig/%{name}
 install %{SOURCE3} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
 
-%py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}/speechd
-%py_postclean
-# library for engines output, API not included in -devel
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/speech-dispatcher/libsdaudio.{so,la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/speech-dispatcher/spd_*.la
+%if %{with static_libs}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/speech-dispatcher/spd_*.a
+%endif
+%if %{without ibmtts}
+%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/speech-dispatcher/modules/ibmtts.conf
+%endif
+
+%find_lang %{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -238,25 +287,18 @@ fi
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
 
-%files
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS README TODO
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
-%attr(755,root,root) %{_bindir}/clibrary
-%attr(755,root,root) %{_bindir}/clibrary2
-%attr(755,root,root) %{_bindir}/connection_recovery
-%attr(755,root,root) %{_bindir}/long_message
-%attr(755,root,root) %{_bindir}/run_test
 %attr(755,root,root) %{_bindir}/spd-conf
 %attr(755,root,root) %{_bindir}/spd-say
 %attr(755,root,root) %{_bindir}/spdsend
 %attr(755,root,root) %{_bindir}/speech-dispatcher
 %dir %{_libdir}/speech-dispatcher
-%attr(755,root,root) %{_libdir}/speech-dispatcher/libsdaudio.so.*
-%dir %{_sysconfdir}/speech-dispatcher
-%dir %{_sysconfdir}/speech-dispatcher/clients
-%dir %{_sysconfdir}/speech-dispatcher/modules
+%{?with_alsa:%attr(755,root,root) %{_libdir}/speech-dispatcher/spd_alsa.so}
+%{_libdir}/speech-dispatcher/spd_oss.so
 %dir %{_libdir}/speech-dispatcher-modules
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_cicero
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_dummy
@@ -264,9 +306,12 @@ fi
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_generic
 %{_datadir}/speech-dispatcher
 %{_datadir}/sounds/speech-dispatcher
+%dir %{_sysconfdir}/speech-dispatcher
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/speechd.conf
+%dir %{_sysconfdir}/speech-dispatcher/clients
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/clients/emacs.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/clients/gnome-speech.conf
+%dir %{_sysconfdir}/speech-dispatcher/modules
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/cicero.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/dtk-generic.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/epos-generic.conf
@@ -281,6 +326,24 @@ fi
 %{_infodir}/spd-say.info*
 %{_infodir}/speech-dispatcher.info*
 %{_infodir}/ssip.info*
+
+%if %{with libao}
+%files audio-libao
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/speech-dispatcher/spd_libao.so
+%endif
+
+%if %{with nas}
+%files audio-nas
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/speech-dispatcher/spd_nas.so
+%endif
+
+%if %{with pulseaudio}
+%files audio-pulse
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/speech-dispatcher/spd_pulse.so
+%endif
 
 %if %{with espeak}
 %files module-espeak
@@ -319,7 +382,8 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libspeechd.so
 %{_libdir}/libspeechd.la
-%{_includedir}/libspeechd.h
+%{_includedir}/speech-dispatcher
+%{_pkgconfigdir}/speech-dispatcher.pc
 
 %if %{with static_libs}
 %files static
@@ -327,9 +391,13 @@ fi
 %{_libdir}/libspeechd.a
 %endif
 
-%files -n python-%{name}
+%if %{with python}
+%files -n python3-%{name}
 %defattr(644,root,root,755)
-%dir %{py_sitedir}/speechd
-%dir %{py_sitedir}/speechd_config
-%{py_sitedir}/speechd/*.py[co]
-%{py_sitedir}/speechd_config/*.py[co]
+%dir %{py3_sitedir}/speechd
+%{py3_sitedir}/speechd/*.py
+%{py3_sitedir}/speechd/__pycache__
+%dir %{py3_sitedir}/speechd_config
+%{py3_sitedir}/speechd_config/*.py
+%{py3_sitedir}/speechd_config/__pycache__
+%endif

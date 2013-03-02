@@ -11,20 +11,6 @@
  @end direntry
  
  @titlepage
---- speech-dispatcher-0.6.6/doc/speech-dispatcher-cs.texi.orig	2008-01-28 14:19:18.000000000 +0100
-+++ speech-dispatcher-0.6.6/doc/speech-dispatcher-cs.texi	2008-06-17 20:57:00.996880597 +0200
-@@ -15,10 +15,8 @@
- @include version-2.texi
- 
- @dircategory Sound
--@dircategory Development
--
- @direntry
--* Speech Dispatcher cs: (speechd-cs).     Speech Dispatcher (in Czech).
-+* Speech Dispatcher cs: (speechd-cs).	Speech Dispatcher (in Czech)
- @end direntry
- 
- @titlepage
 --- speech-dispatcher-0.6.6/doc/speech-dispatcher.texi.orig	2008-02-08 10:02:38.000000000 +0100
 +++ speech-dispatcher-0.6.6/doc/speech-dispatcher.texi	2008-06-17 20:57:47.367501399 +0200
 @@ -13,10 +13,8 @@
