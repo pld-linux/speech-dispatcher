@@ -29,7 +29,8 @@ Patch0:		%{name}-info.patch
 URL:		http://www.freebsoft.org/
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	autoconf >= 2.63
-BuildRequires:	automake
+# for __pycache__ support (python 3.2+)
+BuildRequires:	automake >= 1:1.13
 BuildRequires:	dotconf-devel >= 1.3
 %{?with_espeak:BuildRequires:	espeak-devel}
 BuildRequires:	glib2-devel >= 1:2.28
