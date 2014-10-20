@@ -16,12 +16,12 @@
 Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
-Version:	0.8
-Release:	2
+Version:	0.8.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Sound
 Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
-# Source0-md5:	d88691a64c676122f996230c107c392f
+# Source0-md5:	c219820f6c10ee5a591cb4a93949930c
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -393,6 +393,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_pico
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/pico.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/pico-generic.conf
 %endif
 
 %files libs
