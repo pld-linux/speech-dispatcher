@@ -340,6 +340,7 @@ fi
 /usr/lib/tmpfiles.d/%{name}.conf
 %{_infodir}/spd-say.info*
 %{_infodir}/speech-dispatcher.info*
+%lang(cs) %{_infodir}/speech-dispatcher-cs.info*
 %{_infodir}/ssip.info*
 
 %if %{with libao}
