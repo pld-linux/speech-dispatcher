@@ -16,12 +16,12 @@
 Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
-Version:	0.8.1
-Release:	3
-License:	GPL v2
+Version:	0.8.3
+Release:	1
+License:	LGPL v2.1+ (library and audio drivers), GPL v2+ (programs and speech modules)
 Group:		Applications/Sound
 Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
-# Source0-md5:	c219820f6c10ee5a591cb4a93949930c
+# Source0-md5:	d17b041fa3c87cb1b73ac6e95b80d276
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -37,9 +37,8 @@ BuildRequires:	glib2-devel >= 1:2.28
 %{?with_flite:BuildRequires:	flite-devel}
 %{?with_ibmtts:BuildRequires:	ibmtts-devel}
 BuildRequires:	intltool >= 0.40.0
-BuildRequires:	libatomic_ops
-%{?with_ivona:BuildRequires:	libdumbtts-devel}
 %{?with_libao:BuildRequires:	libao-devel}
+%{?with_ivona:BuildRequires:	libdumbtts-devel}
 BuildRequires:	libsndfile-devel >= 1.0.2
 BuildRequires:	libtool >= 2:2.2
 %{?with_nas:BuildRequires:	nas-devel}
@@ -77,6 +76,7 @@ obsługującą syntezę mowy.
 %package audio-libao
 Summary:	libao audio output module for Speech Dispatcher
 Summary(pl.UTF-8):	Moduł wyjścia dźwięku libao dla Speech Dispatchera
+License:	LGPL v2.1+
 Group:		Applications/Sound
 Requires:	%{name} = %{version}-%{release}
 
@@ -89,6 +89,7 @@ Moduł wyjścia dźwięku libao dla Speech Dispatchera.
 %package audio-nas
 Summary:	NAS audio output module for Speech Dispatcher
 Summary(pl.UTF-8):	Moduł wyjścia dźwięku NAS dla Speech Dispatchera
+License:	LGPL v2.1+
 Group:		Applications/Sound
 Requires:	%{name} = %{version}-%{release}
 
@@ -101,6 +102,7 @@ Moduł wyjścia dźwięku NAS dla Speech Dispatchera.
 %package audio-pulse
 Summary:	PulseAudio audio output module for Speech Dispatcher
 Summary(pl.UTF-8):	Moduł wyjścia dźwięku PulseAudio dla Speech Dispatchera
+License:	LGPL v2.1+
 Group:		Applications/Sound
 Requires:	%{name} = %{version}-%{release}
 
@@ -173,6 +175,7 @@ Moduł syntezatora SVOX Pico dla Speech Dispatchera.
 %package libs
 Summary:	Speech Dispatcher client library
 Summary(pl.UTF-8):	Biblioteka kliencka Speech Dispatchera
+License:	LGPL v2.1+
 Group:		Libraries
 Requires:	glib2 >= 1:2.28
 
@@ -187,6 +190,7 @@ obsługującą syntezę mowy. Ten pakiet zawiera biblitotekę kliencką.
 %package devel
 Summary:	Header files for speech-dispatcher library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki speech-dispatcher
+License:	LGPL v2.1+
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	glib2-devel >= 1:2.28
@@ -200,6 +204,7 @@ Pliki nagłówkowe biblioteki speech-dispatcher.
 %package static
 Summary:	Static speech-dispatcher library
 Summary(pl.UTF-8):	Statyczna biblioteka speech-dispatcher
+License:	LGPL v2.1+
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
@@ -212,6 +217,7 @@ Statyczna biblioteka speech-dispatcher.
 %package -n python3-%{name}
 Summary:	Python 3 library for communication with Speech Dispatcher
 Summary(pl.UTF-8):	Biblioteka Pythona 3 do komunikacji ze Speech Dispatcherem
+License:	LGPL v2.1+
 Group:		Libraries/Python
 Requires:	python3-modules
 Obsoletes:	python-speech-dispatcher
@@ -325,7 +331,6 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/speechd.conf
 %dir %{_sysconfdir}/speech-dispatcher/clients
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/clients/emacs.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/clients/gnome-speech.conf
 %dir %{_sysconfdir}/speech-dispatcher/modules
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/cicero.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/dtk-generic.conf
