@@ -1,8 +1,12 @@
-# TODO: think about default configuration (DefaultModule is espeak, which is not loaded by default)
+# TODO:
+# - think about default configuration (DefaultModule is espeak, which is not loaded by default)
+# - espeak-ng support [pkgconfig(espeak-ng)]
+# - common-lisp and guile bindings (src/api/{cl,guile})
 #
 # Conditional build:
 %bcond_with	ibmtts		# IBM TTS synthesizer support (commercial, proprietary)
 %bcond_without	espeak		# eSpeak synthesizer support
+%bcond_without	espeak_ng	# eSpeak-NG synthesizer support
 %bcond_without	flite		# Flite synthesizer support
 %bcond_without	ivona		# Ivona synthesizer support
 %bcond_without	svox		# SVOX Pico synthesizer support
@@ -16,12 +20,12 @@
 Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
-Version:	0.8.3
-Release:	3
+Version:	0.8.7
+Release:	1
 License:	LGPL v2.1+ (library and audio drivers), GPL v2+ (programs and speech modules)
 Group:		Applications/Sound
 Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
-# Source0-md5:	d17b041fa3c87cb1b73ac6e95b80d276
+# Source0-md5:	6ffe4aff58154a06c14da66cd045fa8c
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -33,6 +37,8 @@ BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.13
 BuildRequires:	dotconf-devel >= 1.3
 %{?with_espeak:BuildRequires:	espeak-devel}
+%{?with_espeak_ng:BuildRequires:	espeak-ng-devel}
+BuildRequires:	gettext-tools
 BuildRequires:	glib2-devel >= 1:2.28
 %{?with_flite:BuildRequires:	flite-devel}
 %{?with_ibmtts:BuildRequires:	ibmtts-devel}
@@ -123,6 +129,18 @@ eSpeak synthesizer module for Speech Dispatcher.
 
 %description module-espeak -l pl.UTF-8
 Moduł syntezatora eSpeak dla Speech Dispatchera.
+
+%package module-espeak-ng
+Summary:	eSpeak NG synthesizer module for Speech Dispatcher
+Summary(pl.UTF-8):	Moduł syntezatora eSpeak NG dla Speech Dispatchera
+Group:		Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+
+%description module-espeak-ng
+eSpeak NG synthesizer module for Speech Dispatcher.
+
+%description module-espeak-ng -l pl.UTF-8
+Moduł syntezatora eSpeak NG dla Speech Dispatchera.
 
 %package module-flite
 Summary:	Flite synthesizer module for Speech Dispatcher
@@ -244,6 +262,7 @@ komunikacji ze Speech Dispatcherem.
 %{__automake}
 %configure \
 	%{__disable python} \
+	--disable-silent-rules \
 	%{__enable_disable static_libs static} \
 	%{__with_without alsa} \
 	--with-default-audio-method=%{?with_alsa:alsa}%{!?with_alsa:oss} \
@@ -310,7 +329,7 @@ fi
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS README TODO
+%doc ANNOUNCE AUTHORS BUGS FAQ NEWS README TODO
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %attr(755,root,root) %{_bindir}/spd-conf
@@ -371,6 +390,13 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak.conf
+%endif
+
+%if %{with espeak_ng}
+%files module-espeak-ng
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak-ng
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-ng.conf
 %endif
 
 %if %{with flite}
