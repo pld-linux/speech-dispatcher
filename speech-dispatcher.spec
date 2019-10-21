@@ -20,17 +20,17 @@
 Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
-Version:	0.8.7
-Release:	3
+Version:	0.8.8
+Release:	1
 License:	LGPL v2.1+ (library and audio drivers), GPL v2+ (programs and speech modules)
 Group:		Applications/Sound
-Source0:	http://www.freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
-# Source0-md5:	6ffe4aff58154a06c14da66cd045fa8c
+Source0:	https://freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
+# Source0-md5:	ad9fb4798004983abd9de15a08cddebc
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
 Patch0:		%{name}-info.patch
-URL:		http://www.freebsoft.org/
+URL:		https://freebsoft.org/speechd
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	autoconf >= 2.63
 # for __pycache__ support (python 3.2+)
