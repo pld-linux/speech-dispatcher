@@ -1,14 +1,15 @@
 # TODO:
 # - think about default configuration (DefaultModule is espeak, which is not loaded by default)
-# - espeak-ng support [pkgconfig(espeak-ng)]
 # - common-lisp and guile bindings (src/api/{cl,guile})
 #
 # Conditional build:
-%bcond_with	ibmtts		# IBM TTS synthesizer support (commercial, proprietary)
+%bcond_with	baratinoo	# Voxygen Baratinoo synthesizer support (proprietary)
 %bcond_without	espeak		# eSpeak synthesizer support
 %bcond_without	espeak_ng	# eSpeak-NG synthesizer support
 %bcond_without	flite		# Flite synthesizer support
+%bcond_with	ibmtts		# IBM TTS synthesizer support (proprietary)
 %bcond_without	ivona		# Ivona synthesizer support
+%bcond_with	kali		# Kali synthesizer support (proprietary?)
 %bcond_without	svox		# SVOX Pico synthesizer support
 %bcond_without	alsa		# ALSA audio output supprot
 %bcond_without	libao		# libao audio output supprot
@@ -20,12 +21,13 @@
 Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
-Version:	0.8.8
-Release:	2
+Version:	0.9.1
+Release:	1
 License:	LGPL v2.1+ (library and audio drivers), GPL v2+ (programs and speech modules)
 Group:		Applications/Sound
-Source0:	https://freebsoft.org/pub/projects/speechd/%{name}-%{version}.tar.gz
-# Source0-md5:	ad9fb4798004983abd9de15a08cddebc
+#Source0Download: https://github.com/brailcom/speechd/releases
+Source0:	https://github.com/brailcom/speechd/releases/download/%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	a38ea1aa14e1cc4a7e058f7bf286db72
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -38,19 +40,23 @@ BuildRequires:	automake >= 1:1.13
 BuildRequires:	dotconf-devel >= 1.3
 %{?with_espeak:BuildRequires:	espeak-devel}
 %{?with_espeak_ng:BuildRequires:	espeak-ng-devel}
-BuildRequires:	gettext-tools
-BuildRequires:	glib2-devel >= 1:2.28
+BuildRequires:	gettext-tools >= 0.19.8
+BuildRequires:	glib2-devel >= 1:2.36
+BuildRequires:	help2man
 %{?with_flite:BuildRequires:	flite-devel}
 %{?with_ibmtts:BuildRequires:	ibmtts-devel}
 BuildRequires:	intltool >= 0.40.0
 %{?with_libao:BuildRequires:	libao-devel}
 %{?with_ivona:BuildRequires:	libdumbtts-devel}
+BuildRequires:	libltdl-devel
 BuildRequires:	libsndfile-devel >= 1.0.2
+BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.2
 %{?with_nas:BuildRequires:	nas-devel}
 BuildRequires:	pkgconfig
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel}
 %{?with_python:BuildRequires:	python3-devel >= 1:3.2}
+%{?with_python:BuildRequires:	python3-pyxdg}
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.527
 %{?with_svox:BuildRequires:	svox-devel}
@@ -66,6 +72,8 @@ Requires(pre):	/usr/sbin/useradd
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dotconf >= 1.3
 Requires:	libsndfile >= 1.0.2
+# for spd-conf
+Requires:	python3-%{name} = %{version}-%{release}
 Requires:	rc-scripts
 Provides:	group(%{name})
 Provides:	user(%{name})
@@ -117,6 +125,18 @@ PulseAudio audio output module for Speech Dispatcher.
 
 %description audio-pulse -l pl.UTF-8
 Moduł wyjścia dźwięku PulseAudio dla Speech Dispatchera.
+
+%package module-baratinoo
+Summary:	Baratinoo synthesizer module for Speech Dispatcher
+Summary(pl.UTF-8):	Moduł syntezatora Baratinoo dla Speech Dispatchera
+Group:		Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+
+%description module-baratinoo
+Baratinoo synthesizer module for Speech Dispatcher.
+
+%description module-baratinoo -l pl.UTF-8
+Moduł syntezatora Baratinoo dla Speech Dispatchera.
 
 %package module-espeak
 Summary:	eSpeak synthesizer module for Speech Dispatcher
@@ -178,6 +198,18 @@ Ivona synthesizer module for Speech Dispatcher.
 %description module-ivona -l pl.UTF-8
 Moduł syntezatora Ivona dla Speech Dispatchera.
 
+%package module-kali
+Summary:	Kali synthesizer module for Speech Dispatcher
+Summary(pl.UTF-8):	Moduł syntezatora Kali dla Speech Dispatchera
+Group:		Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+
+%description module-kali
+Kali synthesizer module for Speech Dispatcher.
+
+%description module-kali -l pl.UTF-8
+Moduł syntezatora Kali dla Speech Dispatchera.
+
 %package module-pico
 Summary:	SVOX Pico synthesizer module for Speech Dispatcher
 Summary(pl.UTF-8):	Moduł syntezatora SVOX Pico dla Speech Dispatchera
@@ -195,7 +227,7 @@ Summary:	Speech Dispatcher client library
 Summary(pl.UTF-8):	Biblioteka kliencka Speech Dispatchera
 License:	LGPL v2.1+
 Group:		Libraries
-Requires:	glib2 >= 1:2.28
+Requires:	glib2 >= 1:2.36
 
 %description libs
 Speech Dispatcher provides a device independent layer for speech
@@ -211,7 +243,7 @@ Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki speech-dispatcher
 License:	LGPL v2.1+
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	glib2-devel >= 1:2.28
+Requires:	glib2-devel >= 1:2.36
 
 %description devel
 Header files for speech-dispatcher library.
@@ -254,6 +286,8 @@ komunikacji ze Speech Dispatcherem.
 %setup -q
 %patch0 -p1
 
+%{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' src/api/python/speechd_config/spd-conf
+
 %build
 %{__libtoolize}
 %{__aclocal}
@@ -265,11 +299,13 @@ komunikacji ze Speech Dispatcherem.
 	--disable-silent-rules \
 	%{__enable_disable static_libs static} \
 	%{__with_without alsa} \
+	%{__with_without baratinoo} \
 	--with-default-audio-method=%{?with_alsa:alsa}%{!?with_alsa:oss} \
 	%{__with_without espeak} \
 	%{__with_without flite} \
 	%{__with_without ibmtts} \
 	%{__with_without ivona} \
+	%{__with_without kali} \
 	%{__with_without libao} \
 	%{__with_without nas} \
 	%{__with_without pulseaudio pulse} \
@@ -329,7 +365,7 @@ fi
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc ANNOUNCE AUTHORS BUGS FAQ NEWS README TODO
+%doc ANNOUNCE AUTHORS BUGS FAQ NEWS README.md README.overview.md TODO
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %attr(755,root,root) %{_bindir}/spd-conf
@@ -358,10 +394,15 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-mbrola-generic.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/festival.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/llia_phon-generic.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/mary-generic.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/swift-generic.conf
 %dir %attr(755,%{name},%{name}) /var/run/speech-dispatcher
 %dir %attr(755,%{name},%{name}) /var/log/speech-dispatcher
-/usr/lib/tmpfiles.d/%{name}.conf
+%{systemdunitdir}/speech-dispatcherd.service
+%{systemdtmpfilesdir}/%{name}.conf
+%{_mandir}/man1/spd-conf.1*
+%{_mandir}/man1/spd-say.1*
+%{_mandir}/man1/speech-dispatcher.1*
 %{_infodir}/spd-say.info*
 %{_infodir}/speech-dispatcher.info*
 %lang(cs) %{_infodir}/speech-dispatcher-cs.info*
@@ -385,6 +426,13 @@ fi
 %attr(755,root,root) %{_libdir}/speech-dispatcher/spd_pulse.so
 %endif
 
+%if %{with baratinoo}
+%files module-baratinoo
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_baratinoo
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/baratinoo.conf
+%endif
+
 %if %{with espeak}
 %files module-espeak
 %defattr(644,root,root,755)
@@ -397,6 +445,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak-ng
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-ng.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-ng-mbrola-generic.conf
 %endif
 
 %if %{with flite}
@@ -418,6 +467,13 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_ivona
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/ivona.conf
+%endif
+
+%if %{with kali}
+%files module-kali
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_kali
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/kali.conf
 %endif
 
 %if %{with svox}
