@@ -21,13 +21,13 @@
 Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
-Version:	0.9.1
+Version:	0.10.1
 Release:	1
 License:	LGPL v2.1+ (library and audio drivers), GPL v2+ (programs and speech modules)
 Group:		Applications/Sound
 #Source0Download: https://github.com/brailcom/speechd/releases
 Source0:	https://github.com/brailcom/speechd/releases/download/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	a38ea1aa14e1cc4a7e058f7bf286db72
+# Source0-md5:	49bc64d8517762d9c9818f5ef3d3bc42
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -394,7 +394,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-mbrola-generic.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/festival.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/llia_phon-generic.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/mary-generic.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/mary-generic-disabled.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/swift-generic.conf
 %dir %attr(755,%{name},%{name}) /var/run/speech-dispatcher
 %dir %attr(755,%{name},%{name}) /var/log/speech-dispatcher
