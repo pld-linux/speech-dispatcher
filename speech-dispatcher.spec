@@ -21,13 +21,13 @@
 Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
-Version:	0.10.1
-Release:	2
+Version:	0.10.2
+Release:	1
 License:	LGPL v2.1+ (library and audio drivers), GPL v2+ (programs and speech modules)
 Group:		Applications/Sound
 #Source0Download: https://github.com/brailcom/speechd/releases
 Source0:	https://github.com/brailcom/speechd/releases/download/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	49bc64d8517762d9c9818f5ef3d3bc42
+# Source0-md5:	ace54a15e1d235d7dbdac3ac99004a5b
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -48,7 +48,7 @@ BuildRequires:	help2man
 BuildRequires:	intltool >= 0.40.0
 %{?with_libao:BuildRequires:	libao-devel}
 %{?with_ivona:BuildRequires:	libdumbtts-devel}
-BuildRequires:	libltdl-devel
+BuildRequires:	libltdl-devel >= 2:2.2
 BuildRequires:	libsndfile-devel >= 1.0.2
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.2
@@ -222,6 +222,18 @@ SVOX Pico synthesizer module for Speech Dispatcher.
 %description module-pico -l pl.UTF-8
 Moduł syntezatora SVOX Pico dla Speech Dispatchera.
 
+%package module-voxin
+Summary:	Voxin synthesizer module for Speech Dispatcher
+Summary(pl.UTF-8):	Moduł syntezatora Voxin dla Speech Dispatchera
+Group:		Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+
+%description module-voxin
+Voxin synthesizer module for Speech Dispatcher.
+
+%description module-voxin -l pl.UTF-8
+Moduł syntezatora Voxin dla Speech Dispatchera.
+
 %package libs
 Summary:	Speech Dispatcher client library
 Summary(pl.UTF-8):	Biblioteka kliencka Speech Dispatchera
@@ -329,10 +341,6 @@ install %{SOURCE3} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
 %if %{with static_libs}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/speech-dispatcher/spd_*.a
 %endif
-%if %{without ibmtts}
-%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/speech-dispatcher/modules/ibmtts.conf
-%endif
-
 %find_lang %{name}
 
 %clean
@@ -390,7 +398,6 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/cicero.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/dtk-generic.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/epos-generic.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-generic.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-mbrola-generic.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/festival.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/llia_phon-generic.conf
@@ -481,8 +488,12 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_pico
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/pico.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/pico-generic.conf
 %endif
+
+%files module-voxin
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_voxin
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/voxin.conf
 
 %files libs
 %defattr(644,root,root,755)
