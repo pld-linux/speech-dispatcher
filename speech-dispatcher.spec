@@ -14,6 +14,7 @@
 %bcond_without	alsa		# ALSA audio output supprot
 %bcond_without	libao		# libao audio output supprot
 %bcond_without	nas		# NAS audio output support
+%bcond_with	voxin		# Voxin output support
 %bcond_without	pulseaudio	# pulse audio output support
 %bcond_without	python		# Python 3 binding (python 2.x no longer supported)
 %bcond_without	static_libs	# don't build static libraries
@@ -22,7 +23,7 @@ Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
 Version:	0.10.2
-Release:	2
+Release:	3
 License:	LGPL v2.1+ (library and audio drivers), GPL v2+ (programs and speech modules)
 Group:		Applications/Sound
 #Source0Download: https://github.com/brailcom/speechd/releases
@@ -52,6 +53,7 @@ BuildRequires:	libltdl-devel >= 2:2.2
 BuildRequires:	libsndfile-devel >= 1.0.2
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.2
+%{?with_voxin:BuildRequires:	libvoxin-devel}
 %{?with_nas:BuildRequires:	nas-devel}
 BuildRequires:	pkgconfig
 %{?with_pulseaudio:BuildRequires:	pulseaudio-devel}
@@ -321,7 +323,8 @@ komunikacji ze Speech Dispatcherem.
 	%{__with_without libao} \
 	%{__with_without nas} \
 	%{__with_without pulseaudio pulse} \
-	%{__with_without svox pico}
+	%{__with_without svox pico} \
+	%{__with_without voxin}
 
 %{__make}
 
@@ -341,6 +344,9 @@ install %{SOURCE3} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
 %if %{with static_libs}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/speech-dispatcher/spd_*.a
 %endif
+
+%{__mv} -f $RPM_BUILD_ROOT%{_datadir}/locale/nb{_NO,}
+
 %find_lang %{name}
 
 %clean
@@ -490,10 +496,12 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/pico.conf
 %endif
 
+%if %{with voxin}
 %files module-voxin
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_voxin
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/voxin.conf
+%endif
 
 %files libs
 %defattr(644,root,root,755)
