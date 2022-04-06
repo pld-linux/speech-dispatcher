@@ -14,7 +14,7 @@
 %bcond_without	alsa		# ALSA audio output supprot
 %bcond_without	libao		# libao audio output supprot
 %bcond_without	nas		# NAS audio output support
-%bcond_with	voxin		# Voxin output support
+%bcond_without	voxin		# Voxin output support
 %bcond_without	pulseaudio	# pulse audio output support
 %bcond_without	python		# Python 3 binding (python 2.x no longer supported)
 %bcond_without	static_libs	# don't build static libraries
@@ -22,13 +22,13 @@
 Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
-Version:	0.10.2
-Release:	5
+Version:	0.11.1
+Release:	1
 License:	LGPL v2.1+ (library and audio drivers), GPL v2+ (programs and speech modules)
 Group:		Applications/Sound
 #Source0Download: https://github.com/brailcom/speechd/releases
 Source0:	https://github.com/brailcom/speechd/releases/download/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	ace54a15e1d235d7dbdac3ac99004a5b
+# Source0-md5:	769545cfe00c1250a70581ffc57027b2
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -284,7 +284,7 @@ Summary(pl.UTF-8):	Biblioteka Pythona 3 do komunikacji ze Speech Dispatcherem
 License:	LGPL v2.1+
 Group:		Libraries/Python
 Requires:	python3-modules
-Obsoletes:	python-speech-dispatcher
+Obsoletes:	python-speech-dispatcher < 0.8
 
 %description -n python3-%{name}
 Speech Dispatcher provides a device independent layer for speech
@@ -407,7 +407,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-mbrola-generic.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/festival.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/llia_phon-generic.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/mary-generic-disabled.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/mary-generic.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/swift-generic.conf
 %dir %attr(755,%{name},%{name}) /var/run/speech-dispatcher
 %dir %attr(755,%{name},%{name}) /var/log/speech-dispatcher
@@ -457,7 +457,9 @@ fi
 %files module-espeak-ng
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak-ng
+%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak-ng-mbrola
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-ng.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-ng-mbrola.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-ng-mbrola-generic.conf
 %endif
 
