@@ -331,14 +331,14 @@ komunikacji ze Speech Dispatcherem.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/var/{log,run}/speech-dispatcher \
-	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
+	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 install -D %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install -D %{SOURCE2}	$RPM_BUILD_ROOT/etc/sysconfig/%{name}
-install %{SOURCE3} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
+install %{SOURCE3} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/speech-dispatcher/spd_*.la
 %if %{with static_libs}
@@ -389,11 +389,11 @@ fi
 %dir %{_libdir}/speech-dispatcher
 %{?with_alsa:%attr(755,root,root) %{_libdir}/speech-dispatcher/spd_alsa.so}
 %{_libdir}/speech-dispatcher/spd_oss.so
-%dir %{_libdir}/speech-dispatcher-modules
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_cicero
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_dummy
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_festival
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_generic
+%dir %{_libexecdir}/speech-dispatcher-modules
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_cicero
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_dummy
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_festival
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_generic
 %{_datadir}/speech-dispatcher
 %{_datadir}/sounds/speech-dispatcher
 %dir %{_sysconfdir}/speech-dispatcher
@@ -442,22 +442,22 @@ fi
 %if %{with baratinoo}
 %files module-baratinoo
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_baratinoo
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_baratinoo
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/baratinoo.conf
 %endif
 
 %if %{with espeak}
 %files module-espeak
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_espeak
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak.conf
 %endif
 
 %if %{with espeak_ng}
 %files module-espeak-ng
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak-ng
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_espeak-ng-mbrola
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_espeak-ng
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_espeak-ng-mbrola
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-ng.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-ng-mbrola.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/espeak-ng-mbrola-generic.conf
@@ -466,42 +466,42 @@ fi
 %if %{with flite}
 %files module-flite
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_flite
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_flite
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/flite.conf
 %endif
 
 %if %{with ibmtts}
 %files module-ibmtts
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_ibmtts
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_ibmtts
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/ibmtts.conf
 %endif
 
 %if %{with ivona}
 %files module-ivona
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_ivona
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_ivona
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/ivona.conf
 %endif
 
 %if %{with kali}
 %files module-kali
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_kali
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_kali
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/kali.conf
 %endif
 
 %if %{with svox}
 %files module-pico
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_pico
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_pico
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/pico.conf
 %endif
 
 %if %{with voxin}
 %files module-voxin
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/speech-dispatcher-modules/sd_voxin
+%attr(755,root,root) %{_libexecdir}/speech-dispatcher-modules/sd_voxin
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/speech-dispatcher/modules/voxin.conf
 %endif
 
