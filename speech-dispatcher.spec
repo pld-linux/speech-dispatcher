@@ -22,13 +22,13 @@
 Summary:	A device independent layer for speech synthesis
 Summary(pl.UTF-8):	Niezależna od urządzenia warstwa obsługująca syntezę mowy
 Name:		speech-dispatcher
-Version:	0.11.4
+Version:	0.11.5
 Release:	1
 License:	LGPL v2.1+ (library and audio drivers), GPL v2+ (programs and speech modules)
 Group:		Applications/Sound
 #Source0Download: https://github.com/brailcom/speechd/releases
 Source0:	https://github.com/brailcom/speechd/releases/download/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	4d812bef4488b35f324db010bf5cac4b
+# Source0-md5:	edcf93047b1d6df421f1c065580a0455
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
